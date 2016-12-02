@@ -1,8 +1,6 @@
 package am.example.zxingscanview;
 
 import android.Manifest;
-import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -54,19 +52,6 @@ public class ZxingScanViewActivity extends BaseActivity implements ZxingScanView
         foregroundView = (ZxingForegroundView) findViewById(R.id.zxingscanview_zfv_foreground);
         scanView.addOnScanListener(this);
         foregroundView.setOpenDrawable(new DoubleCircleDrawable(getResources().getDisplayMetrics().density));
-
-
-        scanView.addOnScanListener(new ZxingScanView.OnScanListener() {
-            @Override
-            public void onError(ZxingScanView scanView) {
-
-            }
-
-            @Override
-            public void onResult(ZxingScanView scanView, Result result, Bitmap barcode, float scaleFactor) {
-
-            }
-        });
     }
 
     @Override
@@ -131,9 +116,5 @@ public class ZxingScanViewActivity extends BaseActivity implements ZxingScanView
                 }
             }
         }
-    }
-
-    public static void startActivity(Context context) {
-        context.startActivity(new Intent(context, ZxingScanViewActivity.class));
     }
 }
