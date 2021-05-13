@@ -39,6 +39,8 @@ import java.util.concurrent.CountDownLatch;
  */
 class DecodeThread extends Thread {
 
+    public static final String BARCODE_BITMAP = "barcode_bitmap";
+    public static final String BARCODE_SCALED_FACTOR = "barcode_scaled_factor";
     private static final Set<BarcodeFormat> PRODUCT_FORMATS;
     private static final Set<BarcodeFormat> INDUSTRIAL_FORMATS;
     private static final Set<BarcodeFormat> ONE_D_FORMATS;
@@ -63,22 +65,17 @@ class DecodeThread extends Thread {
         ONE_D_FORMATS.addAll(INDUSTRIAL_FORMATS);
     }
 
-
-    public static final String BARCODE_BITMAP = "barcode_bitmap";
-    public static final String BARCODE_SCALED_FACTOR = "barcode_scaled_factor";
-
-    private final Map<DecodeHintType, Object> hints;
-    private Handler handler;
-    private final CountDownLatch handlerInitLatch;
-
     public final CameraManager cameraManager;
     public final Handler mHandler;
+    private final Map<DecodeHintType, Object> hints;
+    private final CountDownLatch handlerInitLatch;
+    private Handler handler;
 
     public DecodeThread(CameraManager cameraManager, Handler mHandler,
-                 int barcodeType,
-                 Map<DecodeHintType, ?> baseHints,
-                 String characterSet,
-                 ResultPointCallback resultPointCallback) {
+                        int barcodeType,
+                        Map<DecodeHintType, ?> baseHints,
+                        String characterSet,
+                        ResultPointCallback resultPointCallback) {
         this.cameraManager = cameraManager;
         this.mHandler = mHandler;
 

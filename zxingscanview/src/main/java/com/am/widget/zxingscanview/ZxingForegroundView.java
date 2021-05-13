@@ -1,6 +1,23 @@
-package am.widget.zxingscanview;
+/*
+ * Copyright (C) 2015 AlexMofer
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.am.widget.zxingscanview;
 
 import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -35,24 +52,24 @@ public class ZxingForegroundView extends View {
     public static final int MODE_OPEN = 0;
     public static final int MODE_ERROR = 1;
     private static final long DEFAULT_FRAME_DELAY = 10;//丢失超过30帧就会报警
+    private final OnScanListener scanListener = new OnScanListener();
+    private final OnStateListener stateListener = new OnStateListener();
+    private final Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private final Rect mCoverRect = new Rect();
+    private final ValueAnimator mLoadingAnimator = ValueAnimator.ofFloat(0f, 1f);// 载入动画
+    private final CopyOnWriteArrayList<ResultPointItem> mResultPoints = new CopyOnWriteArrayList<>();
+    private final Interpolator mInterpolator = new CycleInterpolator(1);
     private Drawable mOpenDrawable;
     private Drawable mErrorDrawable;
     private ZxingScanView mScanView;
-    private final OnScanListener scanListener = new OnScanListener();
-    private final OnStateListener stateListener = new OnStateListener();
     private int mScanViewId;
     private int mode;
     private int mCoverColor;
-    private final Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-    private final Rect mCoverRect = new Rect();
     private Drawable mScanRectDrawable;
     private Drawable mScanFlagDrawable;
-    private final ValueAnimator mLoadingAnimator = ValueAnimator.ofFloat(0f, 1f);// 载入动画
     private float mOffset = 0;
-    private final CopyOnWriteArrayList<ResultPointItem> mResultPoints = new CopyOnWriteArrayList<>();
     private boolean mShowResultPoints;
     private long mResultPointsAnimatorDuration;
-    private final Interpolator mInterpolator = new CycleInterpolator(1);
     private int mMaxResultPointsNumber;
     private int mResultPointsColor;
     private float mResultPointsSize;
@@ -161,10 +178,10 @@ public class ZxingForegroundView extends View {
         if (mScanViewId == 0)
             return;
         ViewParent parent = getParent();
-        if (parent != null && parent instanceof View) {
+        if (parent instanceof View) {
             View vParent = (View) parent;
             View child = vParent.findViewById(mScanViewId);
-            if (child != null && child instanceof ZxingScanView) {
+            if (child instanceof ZxingScanView) {
                 bindScanView((ZxingScanView) child);
             }
         }
@@ -273,7 +290,6 @@ public class ZxingForegroundView extends View {
         drawScanFlag(canvas, mScanFlagDrawable, scanWidth, scanHeight, mOffset);
     }
 
-    @SuppressWarnings("all")
     private void drawScanPoint(Canvas canvas, int scanWidth, int scanHeight) {
         if (!mShowResultPoints)
             return;
@@ -282,6 +298,7 @@ public class ZxingForegroundView extends View {
         final int coverX = (getWidth() - scanWidth) / 2;
         final int coverY = (getHeight() - scanHeight) / 2;
         ListIterator iterator = mResultPoints.listIterator();
+        //noinspection WhileLoopReplaceableByForEach
         while (iterator.hasNext()) {
             ResultPointItem point = (ResultPointItem) iterator.next();
             final float offset = mInterpolator.getInterpolation(1 - point.getValue());
@@ -301,9 +318,9 @@ public class ZxingForegroundView extends View {
         return Color.argb(alpha, red, green, blue);
     }
 
-    @SuppressWarnings("all")
     private void editResultPoints() {
         ListIterator<ResultPointItem> iterator = mResultPoints.listIterator();
+        //noinspection WhileLoopReplaceableByForEach
         while (iterator.hasNext()) {
             ResultPointItem point = iterator.next();
             if (!point.cutDuration(DEFAULT_FRAME_DELAY))
@@ -333,6 +350,7 @@ public class ZxingForegroundView extends View {
         }
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
         switch (ev.getAction()) {
@@ -377,8 +395,7 @@ public class ZxingForegroundView extends View {
     }
 
     @Override
-    @SuppressWarnings("all")
-    protected boolean verifyDrawable(Drawable who) {
+    protected boolean verifyDrawable(@SuppressWarnings("NullableProblems") Drawable who) {
         if (mOpenDrawable == null && mErrorDrawable == null)
             return super.verifyDrawable(who);
         return who == mOpenDrawable || who == mErrorDrawable || super.verifyDrawable(who);
@@ -636,7 +653,7 @@ public class ZxingForegroundView extends View {
             this.duration = duration;
         }
 
-        boolean cutDuration(long value) {
+        boolean cutDuration(@SuppressWarnings("SameParameterValue") long value) {
             duration -= value;
             return duration >= 0;
         }

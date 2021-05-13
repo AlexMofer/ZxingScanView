@@ -22,15 +22,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 
-import com.google.zxing.BarcodeFormat;
 import com.google.zxing.DecodeHintType;
 import com.google.zxing.Result;
 import com.google.zxing.ResultPointCallback;
 import com.google.zxing.client.android.camera.CameraManager;
-import com.google.zxing.client.android.decode.DecodeThread;
-import com.google.zxing.client.android.decode.ID;
 
-import java.util.Collection;
 import java.util.Map;
 
 
@@ -43,14 +39,8 @@ public final class ScanHandler extends Handler {
 
     private final OnResultListener listener;
     private final DecodeThread decodeThread;
-    private State state;
     private final CameraManager cameraManager;
-
-    private enum State {
-        PREVIEW,
-        SUCCESS,
-        DONE
-    }
+    private State state;
 
     public ScanHandler(OnResultListener listener,
                        int barcodeType,
@@ -135,6 +125,12 @@ public final class ScanHandler extends Handler {
      */
     public void restartScanDelay(long delay) {
         sendEmptyMessageDelayed(ID.restart_preview, delay);
+    }
+
+    private enum State {
+        PREVIEW,
+        SUCCESS,
+        DONE
     }
 
     public interface OnResultListener {

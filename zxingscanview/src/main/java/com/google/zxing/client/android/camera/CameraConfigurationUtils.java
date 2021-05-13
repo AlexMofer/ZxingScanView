@@ -16,7 +16,6 @@
 
 package com.google.zxing.client.android.camera;
 
-import android.annotation.TargetApi;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.hardware.Camera;

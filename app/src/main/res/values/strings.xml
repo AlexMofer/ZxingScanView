@@ -1,5 +1,3 @@
 <resources>
     <string name="app_name">ZxingScanView</string>
-    <string name="zxingscanview_title">条码扫描</string>
-    <string name="zxingscanview_error">很遗憾，相机出现问题。你可能需要重启设备。</string>
 </resources>
