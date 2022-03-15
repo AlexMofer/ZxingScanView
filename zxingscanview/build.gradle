@@ -4,12 +4,11 @@ plugins {
 
 
 android {
-    compileSdkVersion 32
-    buildToolsVersion '32.0.0'
+    compileSdk 32
 
     defaultConfig {
-        minSdkVersion 15
-        targetSdkVersion 32
+        minSdk 15
+        targetSdk 32
     }
 
     compileOptions {
@@ -19,7 +18,7 @@ android {
 }
 
 dependencies {
-//    api 'com.google.zxing:core:3.3.3'
+    api 'com.google.zxing:core:3.3.3'
 }
 
-apply from: "maven-central-aar.gradle"
+//apply from: "maven-central-aar.gradle"
